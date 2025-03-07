@@ -6,12 +6,30 @@ if [ -z "$BOT_TOKEN" ]; then
   exit 1
 fi
 
-# Create a temporary file to simulate user input
-echo "$BOT_TOKEN" > /app/token_input.txt
-echo "y" >> /app/token_input.txt  # Automatically answer "n" to the update prompt
+# Function to log messages
+log_message() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
+}
 
-# Run the bot and pass the token and update prompt response as input
-python3 main.py < /app/token_input.txt
+# Function to handle updates
+handle_updates() {
+  log_message "Checking for updates..."
+  # Use 'yes' to automatically send 'y' as input when prompted
+  if ! yes | python3 update_checker.py; then
+    log_message "Update check failed. Check the logs for details."
+    exit 1
+  fi
+  log_message "Update check completed successfully."
+}
 
-# Clean up the temporary file
-rm /app/token_input.txt
+# Handle updates
+handle_updates
+
+# Run the bot and pass the token as input
+log_message "Starting the bot..."
+if ! (echo "$BOT_TOKEN" && yes) | python3 main.py; then
+  log_message "Bot failed to start. Check the logs for details."
+  exit 1
+fi
+
+log_message "Bot started successfully."
