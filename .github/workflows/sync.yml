@@ -9,8 +9,18 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/fork-sync@v1
+      - name: Checkout the forked repository
+        uses: actions/checkout@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          upstream_repository: Reloisback/Whiteout-Survival-Discord-Bot
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Add upstream repository
+        run: |
+          git remote add upstream https://github.com/Reloisback/Whiteout-Survival-Discord-Bot.git
+          git fetch upstream
+
+      - name: Merge changes from upstream
+        run: |
+          git checkout main
+          git merge upstream/main
+          git push origin main
