@@ -1,0 +1,16 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Hourly sync
+  workflow_dispatch: # Manual trigger option
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/fork-sync@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          upstream_repository: Reloisback/Whiteout-Survival-Discord-Bot
