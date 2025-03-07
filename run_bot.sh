@@ -6,30 +6,8 @@ if [ -z "$BOT_TOKEN" ]; then
   exit 1
 fi
 
-# Function to log messages
-log_message() {
-  echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
-}
-
-# Function to handle updates
-handle_updates() {
-  log_message "Checking for updates..."
-  # Use 'yes' to automatically send 'y' as input when prompted
-  if ! yes | python3 update_checker.py; then
-    log_message "Update check failed. Check the logs for details."
-    exit 1
-  fi
-  log_message "Update check completed successfully."
-}
-
-# Handle updates
-handle_updates
-
-# Run the bot and pass the token as input
-log_message "Starting the bot..."
-if ! (echo "$BOT_TOKEN" && yes) | python3 main.py; then
-  log_message "Bot failed to start. Check the logs for details."
-  exit 1
-fi
-
-log_message "Bot started successfully."
+# Run the bot and pass the token and 'y' as input using a here document
+python3 main.py <<EOF
+$BOT_TOKEN
+y
+EOF
