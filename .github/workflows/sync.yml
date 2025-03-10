@@ -2,7 +2,7 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '0 * * * *' # Hourly sync
+    - cron: '0 0 * * 1' # Weekly sync (every Monday at midnight)
   workflow_dispatch: # Manual trigger option
 
 jobs:
